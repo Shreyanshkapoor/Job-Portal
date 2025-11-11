@@ -20,13 +20,27 @@ app.use(
 );
 
 // middleware
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://job-portal-frontend-jtzc.onrender.com'
+];
 const corsOptions = {
-    origin:'http://localhost:5173',
-    credentials:true
-}
+    origin: function (origin, callback) {
+        // allow REST tools or same-origin requests with no origin
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization']
+};
 
 app.use(cors(corsOptions));
 
