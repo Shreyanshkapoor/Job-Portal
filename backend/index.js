@@ -12,6 +12,13 @@ dotenv.config({});
 
 const app = express();
 
+app.use(
+  cors({
+    origin: ["https://job-portal-frontend-jtzc.onrender.com"], 
+    credentials: true,
+  })
+);
+
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -37,4 +44,5 @@ app.use("/api/v1/application", applicationRoute);
 app.listen(PORT,()=>{
     connectDB();
     console.log(`Server running at port ${PORT}`);
+
 })
